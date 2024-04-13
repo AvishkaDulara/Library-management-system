@@ -1,20 +1,19 @@
 import express from "express";
 
-
 import bodyParser from "body-parser";
-import { createBook, getName, getNames, getUser, getUsers } from "./database.js";
+import { createBook, deleteBook, getName, getNames, getUser, getUsers } from "./database.js";
 
 const app = express();
 
 app.get("/books", async (req, res) => {
-  const names = await getNames();
-  res.send(names);
+  const books = await getNames();
+  res.send(books);
 });
 
 app.get("/books/:id", async (req, res) => {
   const id = req.params.id;
-  const name = await getName(id);
-  res.send(name);
+  const book = await getName(id);
+  res.send(book);
 });
 
 app.get("/users",async(req,res) => {
@@ -32,6 +31,13 @@ app.post("/books",(bodyParser.json()), async (req, res) => {
   const name = await createBook(title,author,publish_year,genre_of_books,price);
   res.status(+201).send(name);
 });
+
+app.delete("/books/:id",async(req,res) => {
+  const id = req.params.id;
+  const book = await deleteBook(id);
+  res.send(book);
+
+})
 
 
 app.use((err, req, res, next) => {

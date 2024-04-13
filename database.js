@@ -1,6 +1,7 @@
 import mysql from "mysql2";
 
 import dotenv from "dotenv";
+//import { query } from "express";
 dotenv.config();
 
 
@@ -57,4 +58,9 @@ export async function createBook(title, author, publish_year, genre_of_books, pr
   const id = result.insertId;
   const name = getName(id);
   return name;
+}
+
+export async function deleteBook(id){
+    const[rows] = await pool.query("DELETE FROM book WHERE id = ?;",[id]);
+    return rows[0];
 }
