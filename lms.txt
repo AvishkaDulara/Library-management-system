@@ -1,0 +1,13 @@
+requeraments
+	userta log venna puluvn venna oone(sign up/login)
+	books add(CRUD)THIYENNA OONE
+	face 01
+
+	face2
+	memberslata poth denna puluvn
+	membersla register karanna oone
+	poth ganna puluvn
+	poth return karanna puluvn
+
+
+		
