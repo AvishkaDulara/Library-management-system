@@ -28,7 +28,7 @@ export async function getBook(id) {
     FROM book
     WHERE id = ${id}
     `);
-  return rows;
+  return rows[0];
 }
 
 export async function createBook(title, author, publish_year, genre_of_books, price) {
@@ -43,38 +43,64 @@ export async function createBook(title, author, publish_year, genre_of_books, pr
   return name;
 }
 
+export async function updateBook(id,title, author, publish_year,genre_of_books,price){
+  const [rows] = await pool.query(`
+  UPDATE book 
+  SET title=?, author=?, publish_year=?, genre_of_books=?, price=? 
+  WHERE id=?
+  `,[title, author, publish_year,genre_of_books,price,id])
+  const updatedId = rows.updatedId;
+  const book = getBook(id)
+  return book;
+
+}
+
 export async function deleteBook(id) {
   const [rows] = await pool.query("DELETE FROM book WHERE id = ?;", [id]);
   return rows[0];
 }
 
 export async function getUsers() {
-    const [rows] = await pool.query(`
+  const [rows] = await pool.query(`
       SELECT * 
       FROM employee`);
-    return rows;
-  }
-  
-  export async function getUser(id) {
-    const [rows] = await pool.query(`
+  return rows;
+}
+
+export async function getUser(id) {
+  const [rows] = await pool.query(`
       SELECT * 
       FROM employee
       WHERE id = ${id}
       `);
-    return rows[0];
-  }
+  return rows[0];
+}
 
-  export async function createUser(Ename){
-    const[result] = await pool.query(`
-    INSERT INTO employee(Ename)
-    VALUES (?)`,[Ename]);
-    const id = result.insertId;
-    const user = getUser(id);
-    return user;
+export async function createUser(Name) {
+  const [result] = await pool.query(
+    `
+    INSERT INTO employee(Name)
+    VALUES (?)`,
+    [Name]
+  );
+  const id = result.insertId;
+  const user = getUser(id);
+  return user;
+}
 
-  }
+export async function updateUser(id,Name){
+  const [rows] = await pool.query(`
+  UPDATE employee 
+  SET Name=? 
+  WHERE id=?
+  `,[Name,id]);
+  const updatedId = rows.updatedId;
+  const  user = getUser(id);
+  return user;
 
-  export async function deleteUser() {
-    const [rows] = await pool.query("DELETE FROM employee WHERE id = ?;", [id]);
-    return rows[0];
-  }
+}
+
+export async function deleteUser(id) {
+  const [rows] = await pool.query("DELETE FROM employee WHERE id = ?;", [id]);
+  return rows[0];
+}
