@@ -43,16 +43,18 @@ export async function createBook(title, author, publish_year, genre_of_books, pr
   return name;
 }
 
-export async function updateBook(id,title, author, publish_year,genre_of_books,price){
-  const [rows] = await pool.query(`
+export async function updateBook(id, title, author, publish_year, genre_of_books, price) {
+  const [rows] = await pool.query(
+    `
   UPDATE book 
   SET title=?, author=?, publish_year=?, genre_of_books=?, price=? 
   WHERE id=?
-  `,[title, author, publish_year,genre_of_books,price,id])
+  `,
+    [title, author, publish_year, genre_of_books, price, id]
+  );
   const updatedId = rows.updatedId;
-  const book = getBook(id)
+  const book = getBook(id);
   return book;
-
 }
 
 export async function deleteBook(id) {
@@ -88,19 +90,83 @@ export async function createUser(Name) {
   return user;
 }
 
-export async function updateUser(id,Name){
-  const [rows] = await pool.query(`
+export async function updateUser(id, Name) {
+  const [rows] = await pool.query(
+    `
   UPDATE employee 
   SET Name=? 
   WHERE id=?
-  `,[Name,id]);
+  `,
+    [Name, id]
+  );
   const updatedId = rows.updatedId;
-  const  user = getUser(id);
+  const user = getUser(id);
   return user;
-
 }
 
 export async function deleteUser(id) {
-  const [rows] = await pool.query("DELETE FROM employee WHERE id = ?;", [id]);
+  const [rows] = await pool.query(
+    `
+  DELETE 
+  FROM employee 
+  WHERE id = ?;`,
+    [id]
+  );
   return rows[0];
+}
+
+// export async function getUsers() {
+//   const [rows] = await pool.query(`
+//       SELECT *
+//       FROM employee`);
+//   return rows;
+// }
+
+
+export async function getMembers() {
+  const [rows] = await pool.query(`
+  SELECT * 
+  FROM member`);
+  return rows;
+}
+
+export async function getMember(id) {
+  const [rows] = await pool.query(`
+  SELECT * 
+  FROM member
+  WHERE id = ${id}`);
+  return rows[0];
+}
+
+export async function createMember(Name,City) {
+  const [result] = await pool.query(
+    `
+  INSERT INTO member(Name,City)
+  VALUES (?,?)`,
+    [Name, City]
+  );
+  const id = result.insertId;
+  const member = getMember(id);
+  return member;
+}
+
+export async function deleteMember(id) {
+  const [rows] = await pool.query(
+    `
+  DELETE 
+  FROM member 
+  WHERE id = ?;`,
+    [id]
+  );
+  return rows[0];
+}
+
+export async function updateMember(id,Name,City){
+  const [rows] = await pool.query(`
+  UPDATE member 
+  SET Name=?,City=? 
+  WHERE id=?`,[Name,City,id]);
+  const updatedId = rows.updatedId;
+  const member = getMember(id);
+  return member;
 }

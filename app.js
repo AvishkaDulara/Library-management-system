@@ -4,14 +4,19 @@ import bodyParser from "body-parser";
 //import bodyParser from "body-parser";
 import {
   createBook,
+  createMember,
   createUser,
   deleteBook,
+  deleteMember,
   deleteUser,
   getBook,
   getBooks,
+  getMember,
+  getMembers,
   getUser,
   getUsers,
   updateBook,
+  updateMember,
   updateUser,
 } from "./database.js";
 
@@ -75,13 +80,46 @@ app.delete("/users/:id", async (req, res) => {
   res.send(user);
 });
 
-app.put("/users/:id",bodyParser.json(), async (req, res) => {
+app.put("/users/:id", bodyParser.json(), async (req, res) => {
   const id = req.params.id;
-  const {Name} = req.body;
+  const { Name } = req.body;
 
   const user = await updateUser(id, Name);
   res.status(200).send(user);
 });
+
+app.get("/members", async (req, res) => {
+  const members = await getMembers();
+  res.send(members);
+});
+
+app.get("/members/:id", async (req, res) => {
+  const id = req.params.id;
+  const member = await getMember(id);
+  res.send(member);
+});
+
+app.post("/members",bodyParser.json(), async (req, res) => {
+  const { Name } = req.body;
+  const { City } = req.body;
+  const member = await createMember(Name, City);
+  res.status(+201).send(member);
+});
+
+app.put("/members/:id",bodyParser.json(), async (req, res) => {
+  const id = req.params.id;
+  const { Name } = req.body;
+  const { City } = req.body;
+  const member = await updateMember(id, Name, City);
+  res.status(200).send(member);
+});
+
+app.delete("/members/:id",async(req,res) => {
+  const id = req.params.id;
+  const member = await deleteMember(id);
+  res.send(member);
+})
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something broke!");
