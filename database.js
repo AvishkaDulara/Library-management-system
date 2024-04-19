@@ -20,7 +20,7 @@ export async function getBooks() {
   return rows;
 }
 
-console.log("--------------");
+//console.log("--------------");
 
 export async function getBook(id) {
   const [rows] = await pool.query(`
@@ -61,7 +61,7 @@ export async function deleteBook(id) {
   const [rows] = await pool.query("DELETE FROM book WHERE id = ?;", [id]);
   return rows[0];
 }
-
+//------------------------------------------------------------------------------------------------------------
 export async function getUsers() {
   const [rows] = await pool.query(`
       SELECT * 
@@ -114,13 +114,7 @@ export async function deleteUser(id) {
   );
   return rows[0];
 }
-
-// export async function getUsers() {
-//   const [rows] = await pool.query(`
-//       SELECT *
-//       FROM employee`);
-//   return rows;
-// }
+//------------------------------------------------------------------------------------------------------------
 
 
 export async function getMembers() {
@@ -170,3 +164,32 @@ export async function updateMember(id,Name,City){
   const member = getMember(id);
   return member;
 }
+
+//------------------------------------------------------------------------------------------------------------
+
+export async function getInformation(){
+  const [rows] = await pool.query(`
+  SELECT *
+  FROM information`);
+  return rows;
+}
+
+export async function getInfo(member){
+  const [rows] = await pool.query(`
+  SELECT *
+  FROM information
+  WHERE member=?`,[member]);
+  return rows;
+}
+
+//buy books
+export async function createInfo(member,book){
+  const [result] = await pool.query(`
+  INSERT INTO 
+  information(member,book)
+  VALUES(?,?)`,
+  [member,book]);
+  const info = getInfo(member)
+  return info;
+}
+

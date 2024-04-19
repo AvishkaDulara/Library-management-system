@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 //import bodyParser from "body-parser";
 import {
   createBook,
+  createInfo,
   createMember,
   createUser,
   deleteBook,
@@ -11,6 +12,8 @@ import {
   deleteUser,
   getBook,
   getBooks,
+  getInfo,
+  getInformation,
   getMember,
   getMembers,
   getUser,
@@ -58,6 +61,9 @@ app.delete("/books/:id", async (req, res) => {
   res.send(book);
 });
 
+//------------------------------------------------------------------------------------------------------------
+
+
 app.get("/users", async (req, res) => {
   const users = await getUsers();
   res.send(users);
@@ -87,6 +93,9 @@ app.put("/users/:id", bodyParser.json(), async (req, res) => {
   const user = await updateUser(id, Name);
   res.status(200).send(user);
 });
+
+//------------------------------------------------------------------------------------------------------------
+
 
 app.get("/members", async (req, res) => {
   const members = await getMembers();
@@ -119,6 +128,43 @@ app.delete("/members/:id",async(req,res) => {
   const member = await deleteMember(id);
   res.send(member);
 })
+
+//------------------------------------------------------------------------------------------------------------
+
+app.get("/info",async (req,res) => {
+  const info = await getInformation();
+  res.send(info);
+})
+
+
+app.get("/info/:member",async (req,res) => {
+
+  const member = req.params.member;
+  const info  = await getInfo(member);
+  res.send(info);
+})
+
+app.post("/info",bodyParser.json(),async (req,res) => {
+  const {member=member.Name} = req.body;
+  const {book=book.title} = req.body;
+  const info = await createInfo(member, book);
+  res.status(+201).send(info); 
+})
+
+// app.post("/info", async (req, res) => {
+//   try {
+//     const { member, book } = req.body;
+
+//     // Setting default values if member or book is not provided
+//     const memberName = member?.Name || 'Default Member Name';
+//     const bookTitle = book?.title || 'Default Book Title';
+
+//     const info = await createInfo(memberName, bookTitle);
+//     res.status(201).send(info); 
+//   } catch (error) {
+//     res.status(500).send({ error: 'Something went wrong' });
+//   }
+// });
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
