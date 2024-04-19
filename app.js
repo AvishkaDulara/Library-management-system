@@ -130,31 +130,35 @@ app.delete("/members/:id", async (req, res) => {
 
 //------------------------------------------------------------------------------------------------------------
 
-app.get("/info", async (req, res) => {
+app.get("/memberBooks", async (req, res) => {
   const info = await getInformation();
   res.send(info);
 });
 
-app.get("/info/:member", async (req, res) => {
+app.get("/memberBook/:member", async (req, res) => {
   const member = req.params.member;
   const info = await getInfo(member);
   res.send(info);
 });
 
-app.post("/info", bodyParser.json(), async (req, res) => {
+app.post("/lendBook", bodyParser.json(), async (req, res) => {
   const { member = member.Name } = req.body;
   const { book = book.title } = req.body;
   const info = await createInfo(member, book);
   res.status(+201).send(info);
 });
 
-app.put("/info/:member", bodyParser.json, async (req, res) => {
-  const member = req.params.member;
- // const { member } = req.body;
-  const { book } = req.body;
-  const info = await updateInfo(book,member);
-  res.status(200).send(info);
-});
+
+
+// app.put("/lend/:member:book", bodyParser.json(), async (req, res) => {
+//   const member = req.params.member;
+//   const book  = req.params.book;
+//   const return_date= req.body.return_date;
+//   console.log(return_date,"----------------------------")
+//   const info = await updateInfo(member,book,return_date);
+//  // console.log(info)
+//   res.status(200).send(info);
+// });
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

@@ -115,8 +115,6 @@ export async function deleteUser(id) {
   return rows[0];
 }
 //------------------------------------------------------------------------------------------------------------
-
-
 export async function getMembers() {
   const [rows] = await pool.query(`
   SELECT * 
@@ -132,7 +130,7 @@ export async function getMember(id) {
   return rows[0];
 }
 
-export async function createMember(Name,City) {
+export async function createMember(Name, City) {
   const [result] = await pool.query(
     `
   INSERT INTO member(Name,City)
@@ -155,11 +153,14 @@ export async function deleteMember(id) {
   return rows[0];
 }
 
-export async function updateMember(id,Name,City){
-  const [rows] = await pool.query(`
+export async function updateMember(id, Name, City) {
+  const [rows] = await pool.query(
+    `
   UPDATE member 
   SET Name=?,City=? 
-  WHERE id=?`,[Name,City,id]);
+  WHERE id=?`,
+    [Name, City, id]
+  );
   const updatedId = rows.updatedId;
   const member = getMember(id);
   return member;
@@ -167,40 +168,48 @@ export async function updateMember(id,Name,City){
 
 //------------------------------------------------------------------------------------------------------------
 
-export async function getInformation(){
+export async function getInformation() {
   const [rows] = await pool.query(`
   SELECT *
-  FROM information`);
+  FROM lended_book`);
   return rows;
 }
 
-export async function getInfo(member){
-  const [rows] = await pool.query(`
+export async function getInfo(member) {
+  const [rows] = await pool.query(
+    `
   SELECT *
-  FROM information
-  WHERE member=?`,[member]);
+  FROM lended_book
+  WHERE member=?`,
+    [member]
+  );
   return rows;
 }
 
 //buy books
-export async function createInfo(member,book){
-  const [result] = await pool.query(`
+export async function createInfo(member, book) {
+  const [result] = await pool.query(
+    `
   INSERT INTO 
-  information(member,book)
+  lended_book(member,book)
   VALUES(?,?)`,
-  [member,book]);
-  const info = getInfo(member)
+    [member, book]
+  );
+  const info = getInfo(member);
   return info;
 }
 
-export async function updateInfo(){
-  const [rows] = await pool.query(`
-  UPDATE information 
-  SET book=?,return_date=returned
-  where member=?
-  `,[book,"returned",member]);
-  const member = rows.member;
-  const info = getInfo(member)
-  return info;
+// export async function updateInfo( member,book,return_date) {
+//   const [rows] = await pool.query(`
+//   UPDATE lended_book 
+//   SET return_date=?
+//   WHERE member=?and book=?
+//   `,
+//     [return_date,member,book]
+//   );
+//   const updatedMember = rows.updatedMember;
+//   const updateBook = rows.updatedBook;
+//   const info = getInfo(member,book);
+//   return info;
 
-}
+// }
