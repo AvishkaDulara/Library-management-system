@@ -19,6 +19,7 @@ import {
   getUser,
   getUsers,
   updateBook,
+  updateInfo,
   updateMember,
   updateUser,
 } from "./database.js";
@@ -63,7 +64,6 @@ app.delete("/books/:id", async (req, res) => {
 
 //------------------------------------------------------------------------------------------------------------
 
-
 app.get("/users", async (req, res) => {
   const users = await getUsers();
   res.send(users);
@@ -96,7 +96,6 @@ app.put("/users/:id", bodyParser.json(), async (req, res) => {
 
 //------------------------------------------------------------------------------------------------------------
 
-
 app.get("/members", async (req, res) => {
   const members = await getMembers();
   res.send(members);
@@ -108,14 +107,14 @@ app.get("/members/:id", async (req, res) => {
   res.send(member);
 });
 
-app.post("/members",bodyParser.json(), async (req, res) => {
+app.post("/members", bodyParser.json(), async (req, res) => {
   const { Name } = req.body;
   const { City } = req.body;
   const member = await createMember(Name, City);
   res.status(+201).send(member);
 });
 
-app.put("/members/:id",bodyParser.json(), async (req, res) => {
+app.put("/members/:id", bodyParser.json(), async (req, res) => {
   const id = req.params.id;
   const { Name } = req.body;
   const { City } = req.body;
@@ -123,48 +122,39 @@ app.put("/members/:id",bodyParser.json(), async (req, res) => {
   res.status(200).send(member);
 });
 
-app.delete("/members/:id",async(req,res) => {
+app.delete("/members/:id", async (req, res) => {
   const id = req.params.id;
   const member = await deleteMember(id);
   res.send(member);
-})
+});
 
 //------------------------------------------------------------------------------------------------------------
 
-app.get("/info",async (req,res) => {
+app.get("/info", async (req, res) => {
   const info = await getInformation();
   res.send(info);
-})
+});
 
-
-app.get("/info/:member",async (req,res) => {
-
+app.get("/info/:member", async (req, res) => {
   const member = req.params.member;
-  const info  = await getInfo(member);
+  const info = await getInfo(member);
   res.send(info);
-})
+});
 
-app.post("/info",bodyParser.json(),async (req,res) => {
-  const {member=member.Name} = req.body;
-  const {book=book.title} = req.body;
+app.post("/info", bodyParser.json(), async (req, res) => {
+  const { member = member.Name } = req.body;
+  const { book = book.title } = req.body;
   const info = await createInfo(member, book);
-  res.status(+201).send(info); 
-})
+  res.status(+201).send(info);
+});
 
-// app.post("/info", async (req, res) => {
-//   try {
-//     const { member, book } = req.body;
-
-//     // Setting default values if member or book is not provided
-//     const memberName = member?.Name || 'Default Member Name';
-//     const bookTitle = book?.title || 'Default Book Title';
-
-//     const info = await createInfo(memberName, bookTitle);
-//     res.status(201).send(info); 
-//   } catch (error) {
-//     res.status(500).send({ error: 'Something went wrong' });
-//   }
-// });
+app.put("/info/:member", bodyParser.json, async (req, res) => {
+  const member = req.params.member;
+ // const { member } = req.body;
+  const { book } = req.body;
+  const info = await updateInfo(book,member);
+  res.status(200).send(info);
+});
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

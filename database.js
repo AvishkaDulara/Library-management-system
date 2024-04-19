@@ -193,3 +193,14 @@ export async function createInfo(member,book){
   return info;
 }
 
+export async function updateInfo(){
+  const [rows] = await pool.query(`
+  UPDATE information 
+  SET book=?,return_date=returned
+  where member=?
+  `,[book,"returned",member]);
+  const member = rows.member;
+  const info = getInfo(member)
+  return info;
+
+}
