@@ -18,8 +18,8 @@ import {
   getMembers,
   getUser,
   getUsers,
+  returnBook,
   updateBook,
-  updateInfo,
   updateMember,
   updateUser,
 } from "./database.js";
@@ -142,13 +142,21 @@ app.get("/memberBook/:member", async (req, res) => {
 });
 
 app.post("/lendBook", bodyParser.json(), async (req, res) => {
-  const { member = member.Name } = req.body;
-  const { book = book.title } = req.body;
+  const { member  } = req.body;
+  const { book } = req.body;
   const info = await createInfo(member, book);
   res.status(+201).send(info);
 });
 
+app.post("/returnBook", bodyParser.json(),async(req,res) =>{
+  const {member} = req.body;
+  const {book} = req.body;
+  const {return_date} = req.body;
+  const info = await returnBook(member,book,return_date)
+  res.status(+201).send(info);
 
+
+})
 
 // app.put("/lend/:member:book", bodyParser.json(), async (req, res) => {
 //   const member = req.params.member;

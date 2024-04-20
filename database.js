@@ -199,6 +199,18 @@ export async function createInfo(member, book) {
   return info;
 }
 
+
+export async function returnBook(member,book,return_date){
+  const [result] = await pool.query(`
+  INSERT INTO 
+  lended_book(member,book,return_date)
+  VALUES (?,?,?)`,
+  [member,book,return_date]);
+
+  const info = await getInfo(member);
+  return info;
+
+}
 // export async function updateInfo( member,book,return_date) {
 //   const [rows] = await pool.query(`
 //   UPDATE lended_book 
