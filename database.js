@@ -200,28 +200,41 @@ export async function createInfo(member, book) {
 }
 
 
-export async function returnBook(member,book,return_date){
-  const [result] = await pool.query(`
-  INSERT INTO 
-  lended_book(member,book,return_date)
-  VALUES (?,?,?)`,
-  [member,book,return_date]);
+// export async function returnBook(member,book,return_date){
+//   const [result] = await pool.query(`
+//   INSERT INTO 
+//   lended_book(member,book,return_date)
+//   VALUES (?,?,?)`,
+//   [member,book,return_date]);
 
-  const info = await getInfo(member);
-  return info;
+//   const info = await getInfo(member);
+//   return info;
 
-}
+// }
 
-export async function updateInfo( id,return_date) {
+export async function returnBook(id,return_date){
   const [rows] = await pool.query(`
   UPDATE lended_book 
   SET return_date=?
-  WHERE id=?
-  `,
-    [return_date,id]
-  );
+  WHERE id=?`,
+  [return_date,id]);
+
   const updatedId = rows.updatedId;
   const info = getInfo(id);
   return info;
 
- }
+}
+
+// export async function updateInfo( id,return_date) {
+//   const [rows] = await pool.query(`
+//   UPDATE lended_book 
+//   SET return_date=?
+//   WHERE id=?
+//   `,
+//     [return_date,id]
+//   );
+//   const updatedId = rows.updatedId;
+//   const info = getInfo(id);
+//   return info;
+
+//  }

@@ -21,8 +21,8 @@ import {
   returnBook,
   updateBook,
   updateMember,
-  updateUser,
-  updateInfo
+  updateUser
+  //updateInfo
 } from "./database.js";
 
 const app = express();
@@ -149,19 +149,19 @@ app.post("/lendBook", bodyParser.json(), async (req, res) => {
   res.status(+201).send(info);
 });
 
-app.post("/returnBook", bodyParser.json(),async(req,res) =>{
-  const {member} = req.body;
-  const {book} = req.body;
-  const {return_date} = req.body;
-  const info = await returnBook(member,book,return_date)
-  res.status(+201).send(info);
-})
+// app.post("/returnBook", bodyParser.json(),async(req,res) =>{
+//   const {member} = req.body;
+//   const {book} = req.body;
+//   const {return_date} = req.body;
+//   const info = await returnBook(member,book,return_date)
+//   res.status(+201).send(info);
+// })
 
-app.put("/returnBook/:id", bodyParser.json(), async (req, res) => {
+app.post("/returnBook/:id", bodyParser.json(), async (req, res) => {
   const id = req.params.id;
   const return_date= req.body.return_date;
   console.log(return_date,"----------------------------")
-  const info = await updateInfo(id,return_date);
+  const info = await returnBook(id,return_date);
  // console.log(info)
   res.status(200).send(info);
 });
