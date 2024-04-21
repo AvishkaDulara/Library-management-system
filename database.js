@@ -183,7 +183,7 @@ export async function getInfo(id) {
   WHERE id=?`,
     [id]
   );
-  return rows;
+  return rows[0];
 }
 
 //buy books
