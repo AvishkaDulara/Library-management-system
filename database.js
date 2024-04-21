@@ -211,17 +211,17 @@ export async function returnBook(member,book,return_date){
   return info;
 
 }
-// export async function updateInfo( member,book,return_date) {
-//   const [rows] = await pool.query(`
-//   UPDATE lended_book 
-//   SET return_date=?
-//   WHERE member=?and book=?
-//   `,
-//     [return_date,member,book]
-//   );
-//   const updatedMember = rows.updatedMember;
-//   const updateBook = rows.updatedBook;
-//   const info = getInfo(member,book);
-//   return info;
 
-// }
+export async function updateInfo( id,return_date) {
+  const [rows] = await pool.query(`
+  UPDATE lended_book 
+  SET return_date=?
+  WHERE id=?
+  `,
+    [return_date,id]
+  );
+  const updatedId = rows.updatedId;
+  const info = getInfo(id);
+  return info;
+
+ }
