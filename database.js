@@ -175,13 +175,13 @@ export async function getInformation() {
   return rows;
 }
 
-export async function getInfo(member) {
+export async function getInfo(id) {
   const [rows] = await pool.query(
     `
   SELECT *
   FROM lended_book
-  WHERE member=?`,
-    [member]
+  WHERE id=?`,
+    [id]
   );
   return rows;
 }
