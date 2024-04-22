@@ -187,15 +187,16 @@ export async function getInfo(id) {
 }
 
 //buy books
-export async function createInfo(member, book) {
+export async function createInfo(memberId, bookId) {
   const [result] = await pool.query(
     `
   INSERT INTO 
-  lended_book(member,book)
+  lended_book(memberId,bookId)
   VALUES(?,?)`,
-    [member, book]
+    [memberId, bookId]
   );
-  const info = getInfo(member);
+  const id = result.insertId;
+  const info = getInfo(id);
   return info;
 }
 

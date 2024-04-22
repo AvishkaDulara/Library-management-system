@@ -60,6 +60,11 @@ app.put("/books/:id", bodyParser.json(), async (req, res) => {
 app.delete("/books/:id", async (req, res) => {
   const id = req.params.id;
   const book = await deleteBook(id);
+
+  if (!book || book === 'null') {
+    return res.status(404).send("This book was removed.");
+  }
+
   res.send(book);
 });
 
@@ -84,6 +89,11 @@ app.post("/users", bodyParser.json(), async (req, res) => {
 app.delete("/users/:id", async (req, res) => {
   const id = req.params.id;
   const user = await deleteUser(id);
+
+  if (!user || user === 'null') {
+    return res.status(404).send("This employee was removed." );
+  }
+
   res.send(user);
 });
 
@@ -123,11 +133,23 @@ app.put("/members/:id", bodyParser.json(), async (req, res) => {
   res.status(200).send(member);
 });
 
+// app.delete("/members/:id", async (req, res) => {
+//   const id = req.params.id;
+//   const member = await deleteMember(id);
+//   res.send(member);
+// });
 app.delete("/members/:id", async (req, res) => {
   const id = req.params.id;
   const member = await deleteMember(id);
+
+  // Check if member is null or already deleted
+  if (!member || member === 'already_deleted') {
+    return res.status(404).send("This member was deleted.");
+  }
+
   res.send(member);
 });
+
 
 //------------------------------------------------------------------------------------------------------------
 
@@ -137,15 +159,15 @@ app.get("/memberBooks", async (req, res) => {
 });
 
 app.get("/memberBook/:member", async (req, res) => {
-  const member = req.params.member;
-  const info = await getInfo(member);
+  const memberId = req.params.member;
+  const info = await getInfo(memberId);
   res.send(info);
 });
 
 app.post("/lendBook", bodyParser.json(), async (req, res) => {
-  const { member  } = req.body;
-  const { book } = req.body;
-  const info = await createInfo(member, book);
+  const { memberId  } = req.body;
+  const { bookId } = req.body;
+  const info = await createInfo(memberId, bookId);
   res.status(+201).send(info);
 });
 

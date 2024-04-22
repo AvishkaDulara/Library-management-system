@@ -24,12 +24,21 @@ CREATE TABLE member(
 );
 
 --lended_book table
+-- CREATE TABLE lended_book(
+-- 	id integer PRIMARY KEY AUTO_INCREMENT,
+-- 	member VARCHAR(255) NOT NULL,
+-- 	book VARCHAR(255) NOT NULL,
+-- 	return_date DATE DEFAULT NULL,
+-- 	FOREIGN KEY (member) REFERENCES member(Name),
+--   	FOREIGN KEY (book) REFERENCES book(title)
+-- );
+
 CREATE TABLE lended_book(
 	id integer PRIMARY KEY AUTO_INCREMENT,
-	member VARCHAR(255) NOT NULL,
-	book VARCHAR(255) NOT NULL,
+	memberId integer,
+	bookId integer,
 	return_date DATE DEFAULT NULL,
-	FOREIGN KEY (member) REFERENCES member(Name),
-  	FOREIGN KEY (book) REFERENCES book(title)
+	FOREIGN KEY (memberId) REFERENCES member(id),
+  	FOREIGN KEY (bookId) REFERENCES book(id)
 );
 
