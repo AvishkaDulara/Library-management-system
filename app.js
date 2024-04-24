@@ -21,6 +21,7 @@ import {
   returnBook,
   updateBook,
   updateMember,
+  updateQuantity,
   updateUser
   //updateInfo
 } from "./database.js";
@@ -38,13 +39,20 @@ app.get("/books/:id", async (req, res) => {
   res.send(book);
 });
 
-app.post("/books", bodyParser.json(), async (req, res) => {
-  const { title, author, publish_year, genre_of_books, price } = req.body;
-  const name = await createBook(title, author, publish_year, genre_of_books, price);
+app.post("/addBooks", bodyParser.json(), async (req, res) => {
+  const { title, author, publish_year, genre_of_books, price,quantity } = req.body;
+  const name = await createBook(title, author, publish_year, genre_of_books, price,quantity);
   res.status(+201).send(name);
 });
 
-app.put("/books/:id", bodyParser.json(), async (req, res) => {
+app.post("/updateQuantity/:id", bodyParser.json(),async(req,res) => {
+  const id = req.params.id;
+  const quantity = req.body.quantity;
+  const book = await updateQuantity(id,quantity);
+  res.status(200).send(book);
+});
+
+app.put("/updateBooks/:id", bodyParser.json(), async (req, res) => {
   const id = req.params.id;
   const title = req.body.title;
   const author = req.body.author;
@@ -57,7 +65,9 @@ app.put("/books/:id", bodyParser.json(), async (req, res) => {
   res.status(200).send(book);
 });
 
-app.delete("/books/:id", async (req, res) => {
+
+
+app.delete("/deleteBooks/:id", async (req, res) => {
   const id = req.params.id;
   const book = await deleteBook(id);
 
@@ -146,7 +156,6 @@ app.delete("/members/:id", async (req, res) => {
   if (!member || member === 'already_deleted') {
     return res.status(404).send("This member was deleted.");
   }
-
   res.send(member);
 });
 
@@ -187,6 +196,8 @@ app.post("/returnBook/:id", bodyParser.json(), async (req, res) => {
  // console.log(info)
   res.status(200).send(info);
 });
+
+
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

@@ -31,12 +31,12 @@ export async function getBook(id) {
   return rows[0];
 }
 
-export async function createBook(title, author, publish_year, genre_of_books, price) {
+export async function createBook(title, author, publish_year, genre_of_books, price,quantity) {
   const [result] = await pool.query(
     `
-    INSERT INTO book(title,author,publish_year,genre_of_books,price)
-    VALUES (?,?,?,?,?)`,
-    [title, author, publish_year, genre_of_books, price]
+    INSERT INTO book(title,author,publish_year,genre_of_books,price,quantity)
+    VALUES (?,?,?,?,?,?)`,
+    [title, author, publish_year, genre_of_books, price,quantity]
   );
   const id = result.insertId;
   const name = getBook(id);
@@ -55,6 +55,17 @@ export async function updateBook(id, title, author, publish_year, genre_of_books
   const updatedId = rows.updatedId;
   const book = getBook(id);
   return book;
+}
+
+export async function updateQuantity(id,quantity){
+  const [rows] = await pool.query(`
+  UPDATE book
+  SET quantity=?
+  WHERE id=?`,
+[quantity,id]);
+const updatedId = rows.updatedId;
+const info = getBook(id);
+return info;
 }
 
 export async function deleteBook(id) {
@@ -225,6 +236,7 @@ export async function returnBook(id,return_date){
   return info;
 
 }
+
 
 // export async function updateInfo( id,return_date) {
 //   const [rows] = await pool.query(`
