@@ -43,6 +43,18 @@ export async function createBook(title, author, publish_year, genre_of_books, pr
   return name;
 }
 
+export async function decreaseBookQuantity(id,quantity){
+  const [rows] = await pool.query(`
+  UPDATE book 
+  SET quantity=quantity - 1
+  WHERE id=?`,
+[quantity,id]);
+const updatedId = rows.updatedId;
+const book = getBook(id);
+return book;
+}
+
+
 export async function updateBook(id, title, author, publish_year, genre_of_books, price) {
   const [rows] = await pool.query(
     `
@@ -210,6 +222,8 @@ export async function createInfo(memberId, bookId) {
   const info = getInfo(id);
   return info;
 }
+
+
 
 
 // export async function returnBook(member,book,return_date){

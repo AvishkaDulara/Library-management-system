@@ -7,6 +7,7 @@ import {
   createInfo,
   createMember,
   createUser,
+  decreaseBookQuantity,
   deleteBook,
   deleteMember,
   deleteUser,
@@ -42,6 +43,7 @@ app.get("/books/:id", async (req, res) => {
 app.post("/addBooks", bodyParser.json(), async (req, res) => {
   const { title, author, publish_year, genre_of_books, price,quantity } = req.body;
   const name = await createBook(title, author, publish_year, genre_of_books, price,quantity);
+  
   res.status(+201).send(name);
 });
 
@@ -90,13 +92,13 @@ app.get("/users/:id", async (req, res) => {
   res.send(user);
 });
 
-app.post("/users", bodyParser.json(), async (req, res) => {
+app.post("/addUsers", bodyParser.json(), async (req, res) => {
   const { Name } = req.body;
   const user = await createUser(Name);
   res.status(+201).send(user);
 });
 
-app.delete("/users/:id", async (req, res) => {
+app.delete("/deleteUsers/:id", async (req, res) => {
   const id = req.params.id;
   const user = await deleteUser(id);
 
@@ -107,7 +109,7 @@ app.delete("/users/:id", async (req, res) => {
   res.send(user);
 });
 
-app.put("/users/:id", bodyParser.json(), async (req, res) => {
+app.put("/updateUsers/:id", bodyParser.json(), async (req, res) => {
   const id = req.params.id;
   const { Name } = req.body;
 
@@ -128,14 +130,14 @@ app.get("/members/:id", async (req, res) => {
   res.send(member);
 });
 
-app.post("/members", bodyParser.json(), async (req, res) => {
+app.post("/addMembers", bodyParser.json(), async (req, res) => {
   const { Name } = req.body;
   const { City } = req.body;
   const member = await createMember(Name, City);
   res.status(+201).send(member);
 });
 
-app.put("/members/:id", bodyParser.json(), async (req, res) => {
+app.put("/updateMembers/:id", bodyParser.json(), async (req, res) => {
   const id = req.params.id;
   const { Name } = req.body;
   const { City } = req.body;
@@ -148,7 +150,7 @@ app.put("/members/:id", bodyParser.json(), async (req, res) => {
 //   const member = await deleteMember(id);
 //   res.send(member);
 // });
-app.delete("/members/:id", async (req, res) => {
+app.delete("/deletMmembers/:id", async (req, res) => {
   const id = req.params.id;
   const member = await deleteMember(id);
 
@@ -167,7 +169,7 @@ app.get("/memberBooks", async (req, res) => {
   res.send(info);
 });
 
-app.get("/memberBook/:member", async (req, res) => {
+app.get("/memberBooks/:member", async (req, res) => {
   const memberId = req.params.member;
   const info = await getInfo(memberId);
   res.send(info);
@@ -176,7 +178,12 @@ app.get("/memberBook/:member", async (req, res) => {
 app.post("/lendBook", bodyParser.json(), async (req, res) => {
   const { memberId  } = req.body;
   const { bookId } = req.body;
+  //const{available_quantity} = req.body;
   const info = await createInfo(memberId, bookId);
+  const book = await decreaseBookQuantity(id,quantity);
+  res.status(+201).send(book);
+  //const book = await decreaseBookQuantity(available_quantity);
+  //res.status(200).send(book);
   res.status(+201).send(info);
 });
 
