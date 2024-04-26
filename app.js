@@ -7,7 +7,6 @@ import {
   lendBooks,
   createMember,
   createUser,
-  decreaseBookQuantity,
   deleteBook,
   deleteMember,
   deleteUser,
@@ -23,8 +22,7 @@ import {
   updateBook,
   updateMember,
   updateQuantity,
-  updateUser,
-  //updateInfo
+  updateUser
 } from "./database.js";
 
 const app = express();
