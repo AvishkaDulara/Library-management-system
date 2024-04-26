@@ -31,29 +31,30 @@ export async function getBook(id) {
   return rows[0];
 }
 
-export async function createBook(title, author, publish_year, genre_of_books, price,quantity) {
+export async function createBook(title, author, publish_year, genre_of_books, price, quantity, available_quantity) {
   const [result] = await pool.query(
     `
-    INSERT INTO book(title,author,publish_year,genre_of_books,price,quantity)
-    VALUES (?,?,?,?,?,?)`,
-    [title, author, publish_year, genre_of_books, price,quantity]
+    INSERT INTO book(title,author,publish_year,genre_of_books,price,quantity,available_quantity)
+    VALUES (?,?,?,?,?,?,?)`,
+    [title, author, publish_year, genre_of_books, price, quantity, available_quantity]
   );
   const id = result.insertId;
   const name = getBook(id);
   return name;
 }
 
-export async function decreaseBookQuantity(id,quantity){
-  const [rows] = await pool.query(`
+export async function decreaseBookQuantity(id) {
+  const [rows] = await pool.query(
+    `
   UPDATE book 
-  SET quantity=quantity - 1
+  SET available_quantity=available_quantity - 1;
   WHERE id=?`,
-[quantity,id]);
-const updatedId = rows.updatedId;
-const book = getBook(id);
-return book;
+    [id]
+  );
+  const updatedId = rows.updatedId;
+  const book = getBook(id);
+  return book;
 }
-
 
 export async function updateBook(id, title, author, publish_year, genre_of_books, price) {
   const [rows] = await pool.query(
@@ -69,15 +70,17 @@ export async function updateBook(id, title, author, publish_year, genre_of_books
   return book;
 }
 
-export async function updateQuantity(id,quantity){
-  const [rows] = await pool.query(`
+export async function updateQuantity(id, quantity, available_quantity) {
+  const [rows] = await pool.query(
+    `
   UPDATE book
-  SET quantity=?
+  SET quantity=?,available_quantity=?
   WHERE id=?`,
-[quantity,id]);
-const updatedId = rows.updatedId;
-const info = getBook(id);
-return info;
+    [quantity, available_quantity, id]
+  );
+  const updatedId = rows.updatedId;
+  const info = getBook(id);
+  return info;
 }
 
 export async function deleteBook(id) {
@@ -191,14 +194,14 @@ export async function updateMember(id, Name, City) {
 
 //------------------------------------------------------------------------------------------------------------
 
-export async function getInformation() {
+export async function getMemberBooks() {
   const [rows] = await pool.query(`
   SELECT *
   FROM lended_book`);
   return rows;
 }
 
-export async function getInfo(id) {
+export async function getMemberBook(id) {
   const [rows] = await pool.query(
     `
   SELECT *
@@ -210,7 +213,7 @@ export async function getInfo(id) {
 }
 
 //buy books
-export async function createInfo(memberId, bookId) {
+export async function lendBooks(memberId, bookId) {
   const [result] = await pool.query(
     `
   INSERT INTO 
@@ -218,50 +221,36 @@ export async function createInfo(memberId, bookId) {
   VALUES(?,?)`,
     [memberId, bookId]
   );
+
   const id = result.insertId;
-  const info = getInfo(id);
+  await pool.query(
+    `
+    UPDATE book
+    SET available_quantity = available_quantity - 1
+    WHERE id = ?`,
+    [bookId]
+  );
+
+  const info = getMemberBook(id);
   return info;
 }
 
-
-
-
-// export async function returnBook(member,book,return_date){
-//   const [result] = await pool.query(`
-//   INSERT INTO 
-//   lended_book(member,book,return_date)
-//   VALUES (?,?,?)`,
-//   [member,book,return_date]);
-
-//   const info = await getInfo(member);
-//   return info;
-
-// }
-
-export async function returnBook(id,return_date){
-  const [rows] = await pool.query(`
+export async function returnBook(id, return_date) {
+  const [rows] = await pool.query(
+    `
   UPDATE lended_book 
   SET return_date=?
   WHERE id=?`,
-  [return_date,id]);
+    [return_date, id]
+  );
 
   const updatedId = rows.updatedId;
-  const info = getInfo(id);
+
+  await pool.query(`
+  UPDATE book
+  SET available_quantity = available_quantity + 1
+  WHERE id=?`,
+  [id]);
+  const info = getMemberBook(id);
   return info;
-
 }
-
-
-// export async function updateInfo( id,return_date) {
-//   const [rows] = await pool.query(`
-//   UPDATE lended_book 
-//   SET return_date=?
-//   WHERE id=?
-//   `,
-//     [return_date,id]
-//   );
-//   const updatedId = rows.updatedId;
-//   const info = getInfo(id);
-//   return info;
-
-//  }

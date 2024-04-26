@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 //import bodyParser from "body-parser";
 import {
   createBook,
-  createInfo,
+  lendBooks,
   createMember,
   createUser,
   decreaseBookQuantity,
@@ -13,8 +13,8 @@ import {
   deleteUser,
   getBook,
   getBooks,
-  getInfo,
-  getInformation,
+  getMemberBook,
+  getMemberBooks,
   getMember,
   getMembers,
   getUser,
@@ -23,7 +23,7 @@ import {
   updateBook,
   updateMember,
   updateQuantity,
-  updateUser
+  updateUser,
   //updateInfo
 } from "./database.js";
 
@@ -41,16 +41,17 @@ app.get("/books/:id", async (req, res) => {
 });
 
 app.post("/addBooks", bodyParser.json(), async (req, res) => {
-  const { title, author, publish_year, genre_of_books, price,quantity } = req.body;
-  const name = await createBook(title, author, publish_year, genre_of_books, price,quantity);
-  
+  const { title, author, publish_year, genre_of_books, price, quantity, available_quantity } = req.body;
+  const name = await createBook(title, author, publish_year, genre_of_books, price, quantity, available_quantity);
+
   res.status(+201).send(name);
 });
 
-app.post("/updateQuantity/:id", bodyParser.json(),async(req,res) => {
+app.post("/updateQuantity/:id", bodyParser.json(), async (req, res) => {
   const id = req.params.id;
   const quantity = req.body.quantity;
-  const book = await updateQuantity(id,quantity);
+  const available_quantity = req.body.available_quantity;
+  const book = await updateQuantity(id, quantity, available_quantity);
   res.status(200).send(book);
 });
 
@@ -67,13 +68,11 @@ app.put("/updateBooks/:id", bodyParser.json(), async (req, res) => {
   res.status(200).send(book);
 });
 
-
-
 app.delete("/deleteBooks/:id", async (req, res) => {
   const id = req.params.id;
   const book = await deleteBook(id);
 
-  if (!book || book === 'null') {
+  if (!book || book === "null") {
     return res.status(404).send("This book was removed.");
   }
 
@@ -102,8 +101,8 @@ app.delete("/deleteUsers/:id", async (req, res) => {
   const id = req.params.id;
   const user = await deleteUser(id);
 
-  if (!user || user === 'null') {
-    return res.status(404).send("This employee was removed." );
+  if (!user || user === "null") {
+    return res.status(404).send("This employee was removed.");
   }
 
   res.send(user);
@@ -155,33 +154,32 @@ app.delete("/deletMmembers/:id", async (req, res) => {
   const member = await deleteMember(id);
 
   // Check if member is null or already deleted
-  if (!member || member === 'already_deleted') {
+  if (!member || member === "already_deleted") {
     return res.status(404).send("This member was deleted.");
   }
   res.send(member);
 });
 
-
 //------------------------------------------------------------------------------------------------------------
 
 app.get("/memberBooks", async (req, res) => {
-  const info = await getInformation();
+  const info = await getMemberBooks();
   res.send(info);
 });
 
 app.get("/memberBooks/:member", async (req, res) => {
   const memberId = req.params.member;
-  const info = await getInfo(memberId);
+  const info = await getMemberBook(memberId);
   res.send(info);
 });
 
 app.post("/lendBook", bodyParser.json(), async (req, res) => {
-  const { memberId  } = req.body;
+  const { memberId } = req.body;
   const { bookId } = req.body;
   //const{available_quantity} = req.body;
-  const info = await createInfo(memberId, bookId);
-  const book = await decreaseBookQuantity(id,quantity);
-  res.status(+201).send(book);
+  const info = await lendBooks(memberId, bookId);
+  //const book = await decreaseBookQuantity(id,quantity);
+  //res.status(+201).send(book);
   //const book = await decreaseBookQuantity(available_quantity);
   //res.status(200).send(book);
   res.status(+201).send(info);
@@ -197,14 +195,12 @@ app.post("/lendBook", bodyParser.json(), async (req, res) => {
 
 app.post("/returnBook/:id", bodyParser.json(), async (req, res) => {
   const id = req.params.id;
-  const return_date= req.body.return_date;
-  console.log(return_date,"----------------------------")
-  const info = await returnBook(id,return_date);
- // console.log(info)
+  const return_date = req.body.return_date;
+  console.log(return_date, "----------------------------");
+  const info = await returnBook(id, return_date);
+  // console.log(info)
   res.status(200).send(info);
 });
-
-
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
