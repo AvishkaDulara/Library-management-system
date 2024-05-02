@@ -1,7 +1,7 @@
 import mysql from "mysql2";
 
 import dotenv from "dotenv";
-//import { query } from "express";
+
 dotenv.config();
 
 const pool = mysql
@@ -59,7 +59,7 @@ export async function updateBook(id, title, author, publish_year, genre_of_books
   return book;
 }
 
-//update  book quantity 
+//update  book quantity
 export async function updateQuantity(id, quantity, available_quantity) {
   const [rows] = await pool.query(
     `
@@ -98,7 +98,6 @@ export async function getUser(id) {
   return rows[0];
 }
 
-
 //add users for the system
 export async function createUser(Name) {
   const [result] = await pool.query(
@@ -111,7 +110,6 @@ export async function createUser(Name) {
   const user = getUser(id);
   return user;
 }
-
 
 //update users details
 export async function updateUser(id, Name) {
@@ -242,8 +240,7 @@ export async function lendBooks(memberId, bookId) {
   return { info, message };
 }
 
-
-//return books 
+//return books
 export async function returnBook(id, return_date) {
   // Update the return date in the lended_book table
   await pool.query(
@@ -262,7 +259,7 @@ export async function returnBook(id, return_date) {
     `,
     [id]
   );
-  
+
   const bookId = lendedBook[0].bookId;
 
   // Update the available quantity in the book table

@@ -1,7 +1,7 @@
 import express from "express";
 
 import bodyParser from "body-parser";
-//import bodyParser from "body-parser";
+
 import {
   createBook,
   lendBooks,
@@ -142,11 +142,6 @@ app.put("/updateMembers/:id", bodyParser.json(), async (req, res) => {
   res.status(200).send(member);
 });
 
-// app.delete("/members/:id", async (req, res) => {
-//   const id = req.params.id;
-//   const member = await deleteMember(id);
-//   res.send(member);
-// });
 app.delete("/deleteMembers/:id", async (req, res) => {
   const id = req.params.id;
   const member = await deleteMember(id);
