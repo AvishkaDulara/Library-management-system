@@ -22,7 +22,7 @@ import {
   updateBook,
   updateMember,
   updateQuantity,
-  updateUser
+  updateUser,
 } from "./database.js";
 
 const app = express();
@@ -147,7 +147,7 @@ app.put("/updateMembers/:id", bodyParser.json(), async (req, res) => {
 //   const member = await deleteMember(id);
 //   res.send(member);
 // });
-app.delete("/deletMmembers/:id", async (req, res) => {
+app.delete("/deleteMembers/:id", async (req, res) => {
   const id = req.params.id;
   const member = await deleteMember(id);
 
